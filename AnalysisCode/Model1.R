@@ -7,7 +7,7 @@ library(tidyr)
 # 1) Modeling the correlation between maternal and offspring proportions riding the bow
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf")
+bowdf <- read_csv("SharedData/bowdf.csv")
 matbowcor <- bowdf
 #remove all surveys of individual bowriders less than 3 months old
 matbowcor <- bowdf[bowdf$`Age at Observation` > 0.25, ]

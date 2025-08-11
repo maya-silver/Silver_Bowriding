@@ -1,10 +1,9 @@
 library(readr)
-library(dplyr)
 library(tidyr)
 library(MCMCglmm)
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf")
+bowdf <- read_csv("SharedData/bowdf.csv")
 
 #MCMCglmm modeling
 mcmc_bowdf <- bowdf[, c("Observation ID", "Group Size", "Dolphin ID", "Mother ID", "Sex", "Depth", "Survey_Length", "biopsy_day",
@@ -33,6 +32,8 @@ prior.f1 <- list(R = list(V = 1, fix = 1),
 
 mcmc_bowdf <- as.data.frame(mcmc_bowdf) #remove warnings about tibbles
 
+set.seed(286567440) # or skip to line 56 to load in full model results
+
 start <- Sys.time()
 
 mcmc_bow_mod1  <- MCMCglmm(Bowride ~ Age + I(Age^2) + Sex + Depth + Survey_Length + 
@@ -48,10 +49,10 @@ end <- Sys.time()
 
 end - start
 
-#save(mcmc_bow_mod1, file = "IntermediateData/mcmc_bow_mod1.RData")
+#save(mcmc_bow_mod1, file = "IntermediateData/mcmc_bow_mod1_20250811.RData")
 
 #Load pre-run model output stored in Intermediate Data
-load("IntermediateData/mcmc_bow_mod1_20250320.RData")
+load("IntermediateData/mcmc_bow_mod1_20250811.RData")
 summary(mcmc_bow_mod1)
 
 #Calculate the intraclass correlation coefficient (ICC)
