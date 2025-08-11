@@ -1,17 +1,16 @@
 library(readr)
-library(dplyr)
 library(tidyr)
 library(MCMCglmm)
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf")
+bowdf <- read_csv("SharedData/bowdf.csv")
 
 #format
 preg_mod_df <- bowdf[, c("Observation ID", "Dolphin ID", "Mother ID", "Sex",
                          "Age at Observation", "Bowride", "pregnant", "mature", "cycling", "lactating")]
 preg_mod_df <- preg_mod_df %>% drop_na("Sex")
-preg_mod_df$animal <- as.numeric(as.factor(preg_mod_df$`Dolphin ID`))
-preg_mod_df$mother <- as.numeric(as.factor(preg_mod_df$`Mother ID`))
+preg_mod_df$animal <- as.factor(preg_mod_df$`Dolphin ID`)
+preg_mod_df$mother <- as.factor(preg_mod_df$`Mother ID`)
 
 #only females
 preg_mod_df$Sex <- ifelse(preg_mod_df$Sex == "FEMALE", 1, 0)
@@ -24,6 +23,8 @@ preg_mod_df <- as.data.frame(preg_mod_df)
 prior.f1 <- list(R = list(V = 1, fix = 1),
                  G = list(G1 = list(V = 1, nu = 1000, alpha.mu = 0, alpha.V = 1)))
 
+set.seed(286567440)
+
 #run the model
 preg_mod  <- MCMCglmm(Bowride ~ pregnant + cycling + lactating, 
                       family = "threshold",
@@ -31,8 +32,8 @@ preg_mod  <- MCMCglmm(Bowride ~ pregnant + cycling + lactating,
                       prior = prior.f1, nitt = 100000, burnin = 10000, 
                       thin = 10, verbose = TRUE)
 
-#save(preg_mod, file = "IntermediateData/preg_mod.RData")
+#save(preg_mod, file = "IntermediateData/preg_mod_20250811.RData")
 #Load pre-run preg_mod output
-load("IntermediateData/preg_mod_20250328.RData")
+load("IntermediateData/preg_mod_20250811.RData")
 
 summary(preg_mod)

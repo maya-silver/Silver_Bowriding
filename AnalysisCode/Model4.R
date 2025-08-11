@@ -1,18 +1,17 @@
 library(readr)
-library(dplyr)
 library(tidyr)
 library(MCMCglmm)
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf")
+bowdf <- read_csv("SharedData/bowdf.csv")
 
 #MCMCglmm modeling
 mcmc_bowdf <- bowdf[, c("Observation ID", "Group Size", "Dolphin ID", "Mother ID", "Sex", "Depth", "Survey_Length", "biopsy_day",
                         "Age at Observation", "num_surveys", "Bowride", "pregnant", "mature", "cycling", "lactating")]
 
 #format
-mcmc_bowdf$animal <- as.numeric(as.factor(mcmc_bowdf$`Dolphin ID`))
-mcmc_bowdf$mother <- as.numeric(as.factor(mcmc_bowdf$`Mother ID`))
+mcmc_bowdf$animal <- as.factor(mcmc_bowdf$`Dolphin ID`)
+mcmc_bowdf$mother <- as.factor(mcmc_bowdf$`Mother ID`)
 mcmc_bowdf$Sex <- ifelse(mcmc_bowdf$Sex == "FEMALE", 1, 0)
 mcmc_bowdf$Age <- mcmc_bowdf$`Age at Observation`
 mcmc_bowdf$logsurveys <- log(mcmc_bowdf$num_surveys)
@@ -33,6 +32,12 @@ prior.f2 <- list(R = list(V = 1, fix = 1),
 #Remove dolphins with unknown mothers
 mcmc_bowdf <- mcmc_bowdf[!is.na(mcmc_bowdf$mother),]
 
+mcmc_bowdf <- as.data.frame(mcmc_bowdf) #remove warnings about tibbles
+
+set.seed(286567440) # or skip to line 60 to load in full model results
+
+start <- Sys.time()
+
 #run the model
 mcmc_bow_mod2  <- MCMCglmm(Bowride ~ Age + I(Age^2) + Sex + Depth + Survey_Length + 
                              biopsy_day + `Group Size`,
@@ -43,12 +48,16 @@ mcmc_bow_mod2  <- MCMCglmm(Bowride ~ Age + I(Age^2) + Sex + Depth + Survey_Lengt
                            thin = 10, 
                            verbose = TRUE)
 
+end <- Sys.time()
+
+end - start
+
 summary(mcmc_bow_mod2)
 
-#save(mcmc_bow_mod2, file = "IntermediateData/mcmc_bow_mod2.RData")
+#save(mcmc_bow_mod2, file = "IntermediateData/mcmc_bow_mod2_20250811.RData")
 
 #Load pre-run model output stored in Intermediate Data
-load("IntermediateData/mcmc_bow_mod2_20250320.RData")
+load("IntermediateData/mcmc_bow_mod2_20250811.RData")
 
 # Calculation of intraclass correlation coefficient for animal and mother
 ICCa <- mcmc_bow_mod2[["VCV"]][ , "animal"] / rowSums(mcmc_bow_mod2[["VCV"]])

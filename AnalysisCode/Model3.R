@@ -10,8 +10,8 @@ mcmc_bowdf <- bowdf[, c("Observation ID", "Group Size", "Dolphin ID", "Mother ID
                         "Age at Observation", "num_surveys", "Bowride", "pregnant", "mature", "cycling", "lactating")]
 
 #format
-mcmc_bowdf$animal <- as.numeric(as.factor(mcmc_bowdf$`Dolphin ID`))
-mcmc_bowdf$mother <- as.numeric(as.factor(mcmc_bowdf$`Mother ID`))
+mcmc_bowdf$animal <- as.factor(mcmc_bowdf$`Dolphin ID`)
+mcmc_bowdf$mother <- as.factor(mcmc_bowdf$`Mother ID`)
 mcmc_bowdf$Sex <- ifelse(mcmc_bowdf$Sex == "FEMALE", 1, 0)
 mcmc_bowdf$Age <- mcmc_bowdf$`Age at Observation`
 mcmc_bowdf$logsurveys <- log(mcmc_bowdf$num_surveys)
