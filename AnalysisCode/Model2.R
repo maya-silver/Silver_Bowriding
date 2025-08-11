@@ -3,7 +3,7 @@ library(dplyr)
 library(tidyr)
 
 #load the data
-enviro_bowdf <- read_csv("SharedData/enviro_bowdf")
+enviro_bowdf <- read_csv("SharedData/enviro_bowdf.csv")
 
 #Environmental modeling
 
