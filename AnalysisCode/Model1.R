@@ -45,11 +45,12 @@ confint_MPOP <- expand.grid(
 predictions <- predict(maternalbowcor, newdata = confint_MPOP, interval = "confidence", level = 0.95)
 confint_MPOP <- cbind(confint_MPOP, predictions)
 
+pdf(file = "../Figure4.pdf", height = 5.4)
 ggplot(matbowcor, aes(y = prop_on_bow, x = mat_prop_on_bow, color = Sex, shape = Sex))+
-  theme_minimal() +
+  theme_classic() +
   theme(text = element_text(size = 14)) +
-  geom_abline(intercept = (0.07647), slope = (0.88595 + 0.01554 - 0.26503), color = "seagreen") + #MALE
-  geom_abline(intercept = (0.07647), slope = 0.88595, color = "purple1") + #FEMALE
+  geom_segment(x = 0, xend = max(confint_MPOP$mat_prop_on_bow), y = 0.07647, yend = 0.65113766, color = "purple1") + #FEMALE
+  geom_segment(x = 0, xend = max(confint_MPOP$mat_prop_on_bow), y = 0.07647, yend = 0.49476679, color = "seagreen") + #MALE
   geom_point(size = 1.5) +
   geom_ribbon(
     data = confint_MPOP,
@@ -59,11 +60,10 @@ ggplot(matbowcor, aes(y = prop_on_bow, x = mat_prop_on_bow, color = Sex, shape =
   ) +
   labs(x = "Maternal Bowriding Proportion",
        y = "Offspring Bowriding Proportion",
-       #title = "Maternal vs. Offspring Bowriding Correlation"
   ) +
   scale_color_manual(values = c("MALE" = "seagreen", "FEMALE" = "purple1"), 
                      labels = c("FEMALE", "MALE")) +
   scale_fill_manual(values = c("MALE" = "seagreen", "FEMALE" = "purple1")) + 
   scale_shape_manual(values = c("MALE" = 17, "FEMALE" = 21))+
   annotate("text", x = 0.55, y = 0.1, label = parse(text = paste("R^2", "== ", r2_print)), size = 5, color = "black")
-
+dev.off()
