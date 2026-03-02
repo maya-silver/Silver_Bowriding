@@ -3,7 +3,7 @@ library(tidyr)
 library(MCMCglmm)
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf.csv")
+bowdf <- read_csv("SharedData/bow_df20251211.csv")
 
 #MCMCglmm modeling
 mcmc_bowdf <- bowdf[, c("Observation ID", "Group Size", "Dolphin ID", "Mother ID", "Sex", "Depth", "Survey_Length", "biopsy_day",
@@ -54,10 +54,10 @@ end - start
 
 summary(mcmc_bow_mod2)
 
-#save(mcmc_bow_mod2, file = "IntermediateData/mcmc_bow_mod2_20250811.RData")
+#save(mcmc_bow_mod2, file = "IntermediateData/mcmc_bow_mod2_20260302.RData")
 
 #Load pre-run model output stored in Intermediate Data
-load("IntermediateData/mcmc_bow_mod2_20250811.RData")
+load("IntermediateData/mcmc_bow_mod2_20260302.RData")
 
 # Calculation of intraclass correlation coefficient for animal and mother
 ICCa <- mcmc_bow_mod2[["VCV"]][ , "animal"] / rowSums(mcmc_bow_mod2[["VCV"]])
