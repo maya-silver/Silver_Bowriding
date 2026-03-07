@@ -3,7 +3,7 @@ library(tidyr)
 library(MCMCglmm)
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf.csv")
+bowdf <- read_csv("SharedData/bow_df20251211.csv")
 
 #format
 preg_mod_df <- bowdf[, c("Observation ID", "Dolphin ID", "Mother ID", "Sex",
@@ -32,8 +32,8 @@ preg_mod  <- MCMCglmm(Bowride ~ pregnant + cycling + lactating,
                       prior = prior.f1, nitt = 100000, burnin = 10000, 
                       thin = 10, verbose = TRUE)
 
-#save(preg_mod, file = "IntermediateData/preg_mod_20250811.RData")
+#save(preg_mod, file = "IntermediateData/preg_mod_20260306.RData")
 #Load pre-run preg_mod output
-load("IntermediateData/preg_mod_20250811.RData")
+load("IntermediateData/preg_mod_20260306.RData")
 
 summary(preg_mod)
