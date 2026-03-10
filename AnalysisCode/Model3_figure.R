@@ -24,10 +24,10 @@ mean(mcmc_bowdf$`Group Size`)
 
 # intercept, age, age2, sex, depth, survey length, biopsy, group size
 
-maleX1 <- cbind(1, xx1, xx1^2, 0, 6.21, 15.01, 0, 7.48) # male
 femaleX1 <- cbind(1, xx1, xx1^2, 1, 6.21, 15.01, 0, 7.48) # female
+maleX1 <- cbind(1, xx1, xx1^2, 0, 6.21, 15.01, 0, 7.48) # male
 
-series <- list(maleX1, femaleX1)
+series <- list(femaleX1, maleX1)
 
 colVal <- matrix(c(
   160, 32, 240,
@@ -36,13 +36,12 @@ colVal <- matrix(c(
 
 # make base graphic
 windows()
-# pdf(file="Figures/model3_sexage.pdf")
+# pdf(file="Figures/model3_sexage.pdf", width = 4.5, height = 4.5)
 par(mar = c(4.2, 4.2, 1, 1))
 plot(Bowride ~ Age,
      xlab = "Age (yrs)",
      ylab = "Predicited probability of bowriding",
      yaxt = "n",
-     # xlim=c(0,72),
      type = "n",
      data = mcmc_bowdf,
      cex.lab = 1.25,
@@ -55,8 +54,7 @@ for (j in 1:2) {
   X1 <- series[[j]]
   y.lat1 <- BETA1 %*% t(X1)
   y.lat2 <- y.lat1
-  # y.lat2 <- t(apply(y.lat1, 1, sort)) # Sorting to cut off alpha % y.lat2 <- y.lat1
-  
+
   y.pred <- 1 / (1 + exp(-y.lat2)) # this is logit link
   
   lcol <- colVal[j, ]
@@ -76,17 +74,18 @@ for (j in 1:2) {
 }
 
 # Add real data points
-points(Bowride ~ Age,
+points(jitter(Bowride, factor = 0.05) ~ Age,
        pch = 16, col = rgb(0, 0, 0, 20, maxColorValue = 255),
        data = mcmc_bowdf
 )
 
-legend(38, 0.40,
+legend(28, 0.50,
        col = c(
          rgb(colVal[1, 1], colVal[1, 2], colVal[1, 3], 255, maxColorValue = 255),
          rgb(colVal[2, 1], colVal[2, 2], colVal[2, 3], 255, maxColorValue = 255)
        ),
-       legend = c("Male", "Female"), lty = 1, lwd = 3, bty = "n", cex = 1.25
+       legend = c("Female", "Male"), lty = 1, lwd = 3, bty = "n", cex = 1.25
 )
 
 dev.off()
+
