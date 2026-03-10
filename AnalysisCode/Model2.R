@@ -59,24 +59,23 @@ forX1 <- cbind(1, 6.53, xx1, 0, 0, 0, 0, 10.5) # forage (reference level)
 socX1 <- cbind(1, 5.92, xx1, 0, 1, 0, 0, 10.5) # social
 travX1 <- cbind(1, 5.69, xx1, 0, 0, 1, 0, 10.5) # travel
 
-series <- list(forX1, socX1, travX1)
+series <- list(socX1, travX1, forX1)
 
 colVal <- matrix(c(
-  160, 32, 240,
-  0, 178, 0,
-  140, 140, 140
+  80,70,246,
+  247,71,69,
+  71,245,77
 ), nrow = 3, byrow = TRUE)
-
 
 # make base graphic
 windows()
-# pdf(file="Figures/model2_groupsize.pdf")
-par(mar = c(4.2, 4.2, 1, 1))
+# pdf(file="Figures/model2_combined.pdf", height = 4.5, width = 9)
+par(mar = c(4.2, 4.2, 2, 0.5), 
+    mfrow = c(1, 2))
 plot(Bowride_in_survey ~ `Group Size`,
   xlab = "Group Size",
   ylab = "Predicited probability of bowriding in group",
   yaxt = "n",
-  # xlim=c(0,72),
   type = "n",
   data = surveybowmodel_df,
   cex.lab = 1.25,
@@ -88,13 +87,12 @@ axis(2, las = 1, cex.axis = 1.25)
 for (j in 1:3) {
   X1 <- series[[j]]
   y.lat1 <- BETA1 %*% t(X1)
-  y.lat2 <- t(apply(y.lat1, 1, sort)) # Sorting to cut off alpha % y.lat2 <- y.lat1
 
-  y.pred <- 1 / (1 + exp(-y.lat2)) # this is logit link
+  y.pred <- 1 / (1 + exp(-y.lat1)) # this is logit link
 
   lcol <- colVal[j, ]
-
-  lines(xx1, colMeans(y.pred), col = rgb(lcol[1], lcol[2], lcol[3], 255, maxColorValue = 255), lwd = 3)
+  jl <- c(1,2,1)
+  lines(xx1, colMeans(y.pred), col = rgb(lcol[1], lcol[2], lcol[3], 255, maxColorValue = 255), lwd = 3, lty = jl[j])
 
   for (i in lb:ub) {
     points(xx1, jitter(y.pred[i, ], factor = 4),
@@ -109,63 +107,36 @@ for (j in 1:3) {
 }
 
 # Add real data points
-points(Bowride_in_survey ~ `Group Size`,
+points(jitter(Bowride_in_survey, factor = 0.05) ~ `Group Size`,
   pch = 16, col = rgb(0, 0, 0, 20, maxColorValue = 255),
   data = surveybowmodel_df
 )
 
-legend(50, 0.20,
-  col = c(
-    rgb(colVal[1, 1], colVal[1, 2], colVal[1, 3], 255, maxColorValue = 255),
-    rgb(colVal[2, 1], colVal[2, 2], colVal[2, 3], 255, maxColorValue = 255),
-    rgb(colVal[3, 1], colVal[3, 2], colVal[3, 3], 255, maxColorValue = 255)
-  ),
-  legend = c("Forage", "Social", "Travel"), lty = 1, lwd = 3, bty = "n", cex = 1.25
-)
-
-dev.off()
-
 ## Depth figure 
-
-ndraws <- 100 # try 100, 500, 1000 (can also spread further (9 -> 12))
-split <- 100 # number of x's for prediction
 
 beta1 <- coef(surveybowmodel)
 var1 <- vcov(surveybowmodel)
 BETA1 <- rmvnorm(ndraws, beta1, var1) # Taking 100 draws of the posterior vector
 xx1 <- seq(0, 18, length.out = split) # The x-range you want to use for plotting later
 
-cib <- 0.05 # Define level for CI
-lb <- round((ndraws * cib) / 2) # lb and ub define which predictions to be plotted
-ub <- ndraws - lb # >and are based on "cib"
+aggregate(`Group Size` ~ `First Five Activity`, data = surveybowmodel_df, mean)
 
 mean(surveybowmodel$model$`Group Size`)
 mean(surveybowmodel$model$Survey_Length)
 
 # intercept, depth, group size, activity, biopsy, survey length
 
-forX1 <- cbind(1, xx1, 3.32, 0, 0, 0, 0, 10.5) # forage (reference level)
-socX1 <- cbind(1, xx1, 3.32, 0, 1, 0, 0, 10.5) # social
-travX1 <- cbind(1, xx1, 3.32, 0, 0, 1, 0, 10.5) # travel
+forX1 <- cbind(1, xx1, 2.31, 0, 0, 0, 0, 10.5) # forage (reference level)
+socX1 <- cbind(1, xx1, 7.42, 0, 1, 0, 0, 10.5) # social
+travX1 <- cbind(1, xx1, 3.29, 0, 0, 1, 0, 10.5) # travel
 
-series <- list(forX1, socX1, travX1)
-
-colVal <- matrix(c(
-  160, 32, 240,
-  0, 178, 0,
-  140, 140, 140
-), nrow = 3, byrow = TRUE)
+series <- list(socX1, travX1, forX1)
 
 
-# make base graphic
-windows()
-# pdf(file="Figures/model2_depth.pdf")
-par(mar = c(4.2, 4.2, 1, 1))
 plot(Bowride_in_survey ~ Depth,
      xlab = "Depth (m)",
-     ylab = "Predicited probability of bowriding in group",
+     ylab = NA,
      yaxt = "n",
-     # xlim=c(0,18),
      type = "n",
      data = surveybowmodel_df,
      cex.lab = 1.25,
@@ -178,13 +149,11 @@ for (j in 1:3) {
   X1 <- series[[j]]
   y.lat1 <- BETA1 %*% t(X1)
   y.lat2 <- y.lat1
-  # y.lat2 <- t(apply(y.lat1, 1, sort)) # Sorting to cut off alpha % y.lat2 <- y.lat1
-  
   y.pred <- 1 / (1 + exp(-y.lat2)) # this is logit link
   
   lcol <- colVal[j, ]
-  
-  lines(xx1, colMeans(y.pred), col = rgb(lcol[1], lcol[2], lcol[3], 255, maxColorValue = 255), lwd = 3)
+  jl <- c(1,2,1)
+  lines(xx1, colMeans(y.pred), col = rgb(lcol[1], lcol[2], lcol[3], 255, maxColorValue = 255), lwd = 3, lty = jl[j])
   
   for (i in lb:ub) {
     points(xx1, jitter(y.pred[i, ], factor = 4),
@@ -199,18 +168,18 @@ for (j in 1:3) {
 }
 
 # Add real data points
-points(Bowride_in_survey ~ Depth,
+points(jitter(Bowride_in_survey, factor = 0.05) ~ Depth,
        pch = 16, col = rgb(0, 0, 0, 20, maxColorValue = 255),
        data = surveybowmodel_df
 )
 
-legend(12, 0.95,
+legend(10, 0.95,
        col = c(
          rgb(colVal[1, 1], colVal[1, 2], colVal[1, 3], 255, maxColorValue = 255),
          rgb(colVal[2, 1], colVal[2, 2], colVal[2, 3], 255, maxColorValue = 255),
          rgb(colVal[3, 1], colVal[3, 2], colVal[3, 3], 255, maxColorValue = 255)
        ),
-       legend = c("Forage", "Social", "Travel"), lty = 1, lwd = 3, bty = "n", cex = 1.25
+       legend = c("Social", "Travel", "Forage"), lty = c(1,1,2), lwd = 3, bty = "n", cex = 1.25
 )
 
 dev.off()
