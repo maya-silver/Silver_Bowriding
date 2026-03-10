@@ -49,11 +49,11 @@ df <- data.frame(
 df$Age <- factor(df$Age, levels = df$Age)
 
 pdf(file = "Figures/Figure1.pdf", height = 4, width = 4)
-ggplot(df) +
+age <- ggplot(df) +
   theme_classic() +
   geom_bar(aes(x = Age, y = value), stat = "identity", fill = "grey") +
   geom_errorbar(aes(x = Age, ymin = lwr, ymax = upr), width = 0.3, colour = "black") +
-  ylab("Proportion of observations with bowriding") +
+  ylab("") +
   xlab("Age class (years)")
 dev.off()
 
@@ -88,9 +88,9 @@ df <- data.frame(
 )
 
 pdf(file = "Figures/Figure2.pdf", height = 4, width = 4)
-ggplot(df) +
+sex <- ggplot(df) +
   theme_classic() +
-  geom_bar(aes(x = Sex, y = value), stat = "identity", fill = c("purple1", "seagreen")) +
+  geom_bar(aes(x = Sex, y = value), stat = "identity", fill = "grey") +
   geom_errorbar(aes(x = Sex, ymin = lwr, ymax = upr), width = 0.3, colour = "black") +
   ylab("Proportion of observations with bowriding")
 dev.off()
@@ -132,10 +132,19 @@ df <- data.frame(
 df$Depth <- factor(df$Depth, levels = df$Depth)
 
 pdf(file = "Figures/Figure3.pdf", height = 4, width = 4)
-ggplot(df) +
+depth <- ggplot(df) +
   theme_classic() +
   geom_bar(aes(x = Depth, y = value), stat = "identity", fill = "grey") +
   geom_errorbar(aes(x = Depth, ymin = lwr, ymax = upr), width = 0.3, colour = "black") +
-  ylab("Proportion of observations with bowriding") +
+  ylab("") +
   xlab("Water depth (m)")
 dev.off()
+
+# Combine raw data plots
+
+pdf("Figures/RawDataFigures.pdf", height = 4.5, width = 12)
+p <- ggarrange(sex, age, depth, ncol = 3, nrow = 1, vjust = 5)
+p
+
+dev.off()
+

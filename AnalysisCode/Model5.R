@@ -45,30 +45,15 @@ set.seed(286567440)
 BETA1 <- as.data.frame(preg_mod$Sol)
 
 windows()
-# pdf(file="Figures/model5.pdf")
+# pdf(file="Figures/model5.pdf", width = 4.5, height = 4.5)
 par(mfrow = c(3,1), 
-    mar = c(4.2, 4.2, 1, 1))
-#Pregnant
-hist(BETA1$pregnant, probability = TRUE, breaks = 20,
-     ylim = c(0, 10), xlim = c(-0.4, 0.4), border = NA, 
-     main = NA, xlab = "Pregnant", col = NA, yaxt = "none")
-axis(2, las = 1)
-dens <- density(BETA1$pregnant)
-
-lower_bound <- quantile(BETA1$pregnant, probs = 0.025)
-upper_bound <- quantile(BETA1$pregnant, probs = 0.975)
-x_shade <- dens$x[dens$x >= lower_bound & dens$x <= upper_bound]
-y_shade <- dens$y[dens$x >= lower_bound & dens$x <= upper_bound]
-polygon(c(lower_bound, x_shade, upper_bound), c(0, y_shade, 0), 
-        col = "lavender", border = NA)
-lines(dens) 
-points(mean(BETA1$pregnant), 0, cex = 2, pch = 15)
-
+    mar = c(1, 1, 1, 1), oma = c(4,4,1,1), xpd = NA)
 #Cycling
 hist(BETA1$cycling, probability = TRUE, breaks = 20,
      ylim = c(0, 10), xlim = c(-0.4, 0.4), border = NA, 
-     main = NA, xlab = "Cycling", col = NA, yaxt = "none")
-axis(2, las = 1)
+     main = NA, ylab = NA, col = NA, yaxt = "none", 
+     xaxt = "none", xlab = NA)
+
 dens <- density(BETA1$cycling)
 
 lower_bound <- quantile(BETA1$cycling, probs = 0.025)
@@ -78,13 +63,31 @@ y_shade <- dens$y[dens$x >= lower_bound & dens$x <= upper_bound]
 polygon(c(lower_bound, x_shade, upper_bound), c(0, y_shade, 0), 
         col = "darkseagreen2", border = NA)
 lines(dens) 
-points(mean(BETA1$cycling), 0, cex = 2, pch = 15) 
+points(mean(BETA1$cycling), 0, cex = 1.5, pch = 15) 
+
+#Pregnant
+hist(BETA1$pregnant, probability = TRUE, breaks = 20,
+     ylim = c(0, 10), xlim = c(-0.4, 0.4), border = NA, 
+     main = NA, ylab = NA, col = NA, yaxt = "none", 
+     xaxt = "none", xlab = NA)
+
+dens <- density(BETA1$pregnant)
+
+lower_bound <- quantile(BETA1$pregnant, probs = 0.025)
+upper_bound <- quantile(BETA1$pregnant, probs = 0.975)
+x_shade <- dens$x[dens$x >= lower_bound & dens$x <= upper_bound]
+y_shade <- dens$y[dens$x >= lower_bound & dens$x <= upper_bound]
+polygon(c(lower_bound, x_shade, upper_bound), c(0, y_shade, 0), 
+        col = "lavender", border = NA)
+lines(dens) 
+points(mean(BETA1$pregnant), 0, cex = 1.5, pch = 15)
 
 #Lactating
 hist(BETA1$lactating, probability = TRUE, breaks = 20,
      ylim = c(0, 10), xlim = c(-0.4, 0.4), border = NA, 
-     main = NA, xlab = "Lactating", col = NA, yaxt = "none")
-axis(2, las = 1)
+     main = NA, ylab = NA, col = NA, yaxt = "none", 
+     xlab = "Posterior Distribution")
+
 dens <- density(BETA1$lactating)
 
 lower_bound <- quantile(BETA1$lactating, probs = 0.025)
@@ -94,6 +97,11 @@ y_shade <- dens$y[dens$x >= lower_bound & dens$x <= upper_bound]
 polygon(c(lower_bound, x_shade, upper_bound), c(0, y_shade, 0), 
         col = "skyblue", border = NA)
 lines(dens) 
-points(mean(BETA1$lactating), 0, cex = 2, pch = 15)
+points(mean(BETA1$lactating), 0, cex = 1.5, pch = 15)
+
+segments(-0.4, 0.23, -0.4, 38)
+text(-0.48, 32, "Cycling")
+text(-0.48, 18, "Pregnant")
+text(-0.48, 4, "Lactating")
 
 dev.off()
