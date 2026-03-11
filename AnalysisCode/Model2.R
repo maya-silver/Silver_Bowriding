@@ -84,6 +84,8 @@ plot(Bowride_in_survey ~ `Group Size`,
 
 axis(2, las = 1, cex.axis = 1.25)
 
+mtext("a", side = 2, cex = 1.5, las = 1, at = c(-24, 1.10))
+
 for (j in 1:3) {
   X1 <- series[[j]]
   y.lat1 <- BETA1 %*% t(X1)
@@ -179,8 +181,10 @@ legend(10, 0.95,
          rgb(colVal[2, 1], colVal[2, 2], colVal[2, 3], 255, maxColorValue = 255),
          rgb(colVal[3, 1], colVal[3, 2], colVal[3, 3], 255, maxColorValue = 255)
        ),
-       legend = c("Social", "Travel", "Forage"), lty = c(1,1,2), lwd = 3, bty = "n", cex = 1.25
+       legend = c("Social", "Travel", "Forage"), lty = c(1,2,1), lwd = 3, bty = "n", cex = 1.25
 )
+
+mtext("b", side = 2, cex = 1.5, las = 1, at = c(-24, 1.10))
 
 dev.off()
 

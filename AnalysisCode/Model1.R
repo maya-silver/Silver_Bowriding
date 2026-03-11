@@ -6,7 +6,7 @@ library(tidyr)
 # 1) Modeling the correlation between maternal and offspring proportions riding the bow
 
 #load the data
-bowdf <- read_csv("SharedData/bowdf.csv")
+bowdf <- read_csv("SharedData/bow_df20251211.csv")
 matbowcor <- bowdf
 #remove all surveys of individual bowriders less than 3 months old
 matbowcor <- bowdf[bowdf$`Age at Observation` > 0.25, ]
@@ -45,7 +45,7 @@ confint_MPOP <- expand.grid(
 predictions <- predict(maternalbowcor, newdata = confint_MPOP, interval = "confidence", level = 0.95)
 confint_MPOP <- cbind(confint_MPOP, predictions)
 
-pdf(file = "../Figure4.pdf", height = 5.4)
+pdf(file = "Figures/Figure4.pdf", height = 5.4)
 ggplot(matbowcor, aes(y = prop_on_bow, x = mat_prop_on_bow, color = Sex, shape = Sex))+
   theme_classic() +
   theme(text = element_text(size = 14)) +

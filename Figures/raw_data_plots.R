@@ -143,7 +143,8 @@ dev.off()
 # Combine raw data plots
 
 pdf("Figures/RawDataFigures.pdf", height = 4.5, width = 12)
-p <- ggarrange(sex, age, depth, ncol = 3, nrow = 1, vjust = 5)
+p <- ggarrange(sex, age, depth, ncol = 3, nrow = 1, 
+               labels = c("a", "b", "c"))
 p
 
 dev.off()
