@@ -54,7 +54,7 @@ ggplot(matbowcor, aes(y = prop_on_bow, x = mat_prop_on_bow, color = Sex, shape =
   theme(text = element_text(size = 14)) +
   geom_segment(x = 0, xend = max(confint_MPOP$mat_prop_on_bow), y = 0.08371857, yend = 0.5853105, color = "purple1") + # FEMALE
   geom_segment(x = 0, xend = max(confint_MPOP$mat_prop_on_bow), y = 0.08329162, yend = 0.4755792, color = "seagreen") + # MALE
-  geom_point(size = 1.5) +
+  geom_point(data = matbowcor, size = 1.5, aes(shape = Sex, color = Sex, fill = Sex)) +
   geom_ribbon(
     data = confint_MPOP,
     aes(ymin = lwr, ymax = upr, x = mat_prop_on_bow, fill = Sex),
@@ -67,6 +67,7 @@ ggplot(matbowcor, aes(y = prop_on_bow, x = mat_prop_on_bow, color = Sex, shape =
   ) +
   scale_color_manual(values = c("FEMALE" = "purple1", "MALE" = "seagreen")) +
   scale_fill_manual(values = c("FEMALE" = "purple1", "MALE" = "seagreen")) +
-  scale_shape_manual(values = c("FEMALE" = 21, "MALE" = 17)) +
+  scale_shape_manual(values = c("FEMALE" = 1, "MALE" = 17)) +
   annotate("text", x = 0.55, y = 0.1, label = parse(text = paste("R^2", "== ", r2_print)), size = 5, color = "black")
+
 dev.off()
